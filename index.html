@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+  <script src="option_prices_20140310.js"></script>
+  <script src="options_20140310.js"></script>
+  <script src="test.js"></script>
+
+  <script>
+  $(document).ready(function(){
+
+
+   // - an option has to have a non-zero price value associated with it, or,
+   //  - have a property of "is_default":true, and
+   //  - cannot have the "no_ui" property
+
+
+    // List the eligible options from step 2 onto the UI
+    // - sorted by price (highest-to-lowest),
+    // - including the option's name
+    // - including the option's price next to the name and using the currency_code for localizing/formatted the price value
+    // - if an option has a price value of 0, use "-" instead of the 0
+    // - display the total value of the visible options, which should also take into account the base price, inspect_prep_price and personal_delivery_price values
+
+
+
+
+
+    var merged = [];
+    for (var option1 in opt1.options){
+      //console.log(option1, opt1.options[option1]);
+      for (var option2 in opt2.options) {
+        if(option1 == option2) {
+          x = _.extendOwn(opt1.options[option1], opt2.options[option2]);
+          merged.push(x);
+        }
+      }
+    }
+    x += "<table class='table-bordered'>"
+    for(var option in merged){
+      var no_ui      = _.isMatch(merged[option], {"no_ui": true})
+      var price      = _.isMatch(merged[option], {"price": 0})
+      var is_default = _.isMatch(merged[option], {"is_default": true})
+      if(!no_ui && (!price || is_default)){
+        console.log(merged[option]);
+          x += "<tr>"
+        for(var list in merged[option]){
+        //   console.log(list)
+          x += "<td>";
+          x += merged[option][list];
+          x += "</td>";
+        }
+      }
+    }
+      x += "</tr></table>"
+      $("#content").html(x);
+    console.log("all options:", merged);
+
+  })
+
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div id="content"></div>
+  </div>
+</body>
+</html>
